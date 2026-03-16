@@ -1,1 +1,823 @@
-<!DOCTYPE html><html><body><h1>Calculadora Effect - em deploy...</h1></body></html>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora de Performance · Effect Digital</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{background:#030608;min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:24px 16px;font-family:'DM Sans',sans-serif;color:#fff;-webkit-font-smoothing:antialiased;}
+.app{width:100%;max-width:1020px;background:#05080F;border:1px solid #1A2D4A;border-radius:20px;overflow:hidden;}
+
+/* TOPBAR */
+.tb{background:#080E1C;padding:18px 28px 0;border-bottom:1px solid #1A2D4A;position:relative;overflow:hidden;}
+.tb-glow{position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:500px;height:120px;background:radial-gradient(ellipse,rgba(37,99,235,0.14) 0%,transparent 70%);pointer-events:none;}
+.tb-stripes{position:absolute;top:10px;right:28px;font-size:10px;letter-spacing:5px;color:#2563EB;opacity:0.13;font-weight:700;pointer-events:none;}
+.tb-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.brand-name{font-family:'Playfair Display',serif;font-size:26px;font-weight:900;color:#fff;letter-spacing:-0.5px;}
+.brand-tag{font-size:10px;font-weight:600;color:rgba(255,255,255,0.3);letter-spacing:0.14em;text-transform:uppercase;margin-top:5px;}
+.tb-badge{background:#0D1A35;border:1px solid #2563EB;border-radius:12px;padding:10px 20px;text-align:right;}
+.tb-badge-lbl{font-size:10px;font-weight:700;color:#5A9AFF;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:4px;}
+.tb-badge-val{font-family:'Playfair Display',serif;font-size:22px;font-weight:900;color:#fff;}
+.nav-tabs{display:flex;gap:2px;}
+.nav-tab{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;color:rgba(255,255,255,0.55);background:none;border:none;cursor:pointer;padding:12px 18px 14px;border-radius:8px 8px 0 0;transition:all 0.2s;letter-spacing:0.06em;text-transform:uppercase;position:relative;}
+.nav-tab:hover{color:#fff;}
+.nav-tab.active{background:#0B1428;color:#fff;}
+.nav-tab.active::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:#2563EB;}
+.nav-tab.hl-green{color:rgba(74,222,128,0.7);border:1px solid rgba(74,222,128,0.2);border-bottom:none;background:rgba(74,222,128,0.04);}
+.nav-tab.hl-green:hover{color:#4ADE80;}
+.nav-tab.hl-green.active{background:#071810;color:#4ADE80;border-color:rgba(74,222,128,0.35);}
+.nav-tab.hl-green.active::after{background:#4ADE80;}
+
+/* PANELS */
+.panel{display:none;background:#05080F;}
+.panel.active{display:block;}
+.pp{padding:24px 28px;}
+
+/* LAYOUT */
+.split{display:grid;grid-template-columns:1fr 1fr;min-height:580px;}
+.sl{padding:22px 18px 22px 28px;border-right:1px solid #1A2D4A;display:flex;flex-direction:column;}
+.sr{padding:22px 28px 22px 18px;display:flex;flex-direction:column;}
+
+/* PILLS */
+.sc-row{display:flex;gap:6px;margin-bottom:18px;}
+.sc-pill{font-family:'DM Sans',sans-serif;font-size:10px;font-weight:700;padding:5px 14px;border-radius:20px;border:1px solid #243D5C;background:transparent;color:rgba(255,255,255,0.6);cursor:pointer;transition:all 0.15s;letter-spacing:0.08em;text-transform:uppercase;}
+.sc-pill:hover{color:#fff;border-color:#5A9AFF;}
+.sc-pill.active{background:#2563EB;border-color:#2563EB;color:#fff;}
+
+/* INPUT CARDS */
+.ic{background:#080E1C;border:1px solid #1A2D4A;border-radius:12px;padding:13px 14px;margin-bottom:10px;transition:border-color 0.2s;flex-shrink:0;}
+.ic:focus-within{border-color:#2563EB;}
+.ic-lbl{font-size:9px;font-weight:700;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:8px;display:flex;align-items:center;gap:5px;}
+.ic-plus{color:#2563EB;}
+.spin-row{display:flex;align-items:center;gap:6px;}
+.sb{width:30px;height:30px;border-radius:7px;border:1px solid #243D5C;background:#05080F;color:rgba(255,255,255,0.6);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.12s;font-family:'DM Sans',sans-serif;}
+.sb:hover{background:#2563EB;color:#fff;border-color:#2563EB;}
+.sb:active{transform:scale(0.9);}
+.ni-w{flex:1;position:relative;}
+.ni-pre{position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:11px;font-weight:600;color:#5A9AFF;pointer-events:none;}
+.ni-suf{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:11px;font-weight:600;color:#5A9AFF;pointer-events:none;}
+.ni{width:100%;height:34px;border:1px solid #243D5C;border-radius:7px;background:#05080F;color:#fff;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;text-align:right;padding:0 28px 0 8px;outline:none;-moz-appearance:textfield;transition:border-color 0.15s;}
+.ni.pre{padding-left:26px;}
+.ni::-webkit-outer-spin-button,.ni::-webkit-inner-spin-button{-webkit-appearance:none;}
+.ni:focus{border-color:#2563EB;}
+.rm{width:100%;margin-top:8px;accent-color:#2563EB;opacity:0.4;}
+
+/* FUNNEL */
+.f-hd{font-size:9px;font-weight:700;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:0.15em;text-align:center;margin-bottom:14px;}
+.funnel{display:flex;flex-direction:column;align-items:center;flex:1;justify-content:space-between;}
+.f-step{display:flex;justify-content:center;width:100%;}
+.f-conn{display:flex;flex-direction:column;align-items:center;flex-shrink:0;}
+.f-line{width:1px;height:8px;background:#2563EB;opacity:0.4;}
+.f-bubble{background:#060D1C;border:1px solid rgba(37,99,235,0.45);border-radius:20px;padding:3px 11px;font-size:9px;font-weight:700;color:#5A9AFF;letter-spacing:0.07em;text-transform:uppercase;white-space:nowrap;margin:3px 0;}
+.f-box{width:100%;background:#080E1C;border:1px solid #1A2D4A;border-top:2px solid #2563EB;border-radius:12px;padding:12px 14px;display:flex;align-items:center;gap:11px;}
+.f-box.hl{background:#0D1A35;border-color:#2563EB;border-top-color:#5A9AFF;}
+.f-ico{width:36px;height:36px;border-radius:9px;background:rgba(37,99,235,0.12);border:1px solid rgba(37,99,235,0.25);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px;}
+.f-box.hl .f-ico{background:rgba(37,99,235,0.25);border-color:rgba(37,99,235,0.5);}
+.f-info{flex:1;min-width:0;}
+.f-lbl{font-size:9px;font-weight:700;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:2px;}
+.f-val{font-family:'Playfair Display',serif;font-size:22px;font-weight:900;color:#fff;line-height:1;}
+.f-sub{font-size:10px;color:rgba(255,255,255,0.3);margin-top:2px;}
+.f-box.hl .f-lbl{color:#5A9AFF;}
+.f-box.hl .f-sub{color:#5A9AFF;}
+
+/* AMPULHETA MISTÉRIO */
+.f-sep{display:flex;align-items:center;gap:8px;margin:5px 0;width:100%;}
+.f-sep-line{flex:1;height:1px;}
+.f-sep-pill{font-size:9px;font-weight:700;color:#2563EB;letter-spacing:0.1em;text-transform:uppercase;white-space:nowrap;padding:3px 10px;border:1px solid rgba(37,99,235,0.35);border-radius:20px;background:rgba(37,99,235,0.07);}
+.f-box-m{width:100%;background:rgba(37,99,235,0.04);border:1px dashed rgba(37,99,235,0.28);border-bottom:2px solid rgba(37,99,235,0.38);border-top:none;border-radius:12px;padding:10px 13px;display:flex;align-items:center;gap:10px;}
+.f-ico-m{width:32px;height:32px;border-radius:8px;background:rgba(37,99,235,0.07);border:1px dashed rgba(37,99,235,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px;opacity:0.7;}
+.f-info-m{flex:1;min-width:0;}
+.f-lbl-m{font-size:9px;font-weight:700;color:rgba(255,255,255,0.32);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:2px;}
+.f-val-m{font-family:'Playfair Display',serif;font-size:18px;font-weight:900;color:rgba(37,99,235,0.5);letter-spacing:3px;line-height:1;}
+.f-sub-m{font-size:10px;color:rgba(255,255,255,0.2);margin-top:2px;}
+.f-conn-m{display:flex;flex-direction:column;align-items:center;}
+.f-line-m{width:1px;height:7px;background:rgba(37,99,235,0.22);}
+.sb-m{width:22px;height:22px;border-radius:5px;border:1px dashed rgba(37,99,235,0.28);background:rgba(37,99,235,0.06);color:rgba(255,255,255,0.4);font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.1s;user-select:none;}
+.sb-m:hover{background:rgba(37,99,235,0.2);color:#fff;border-color:#2563EB;}
+.ni-m{width:100%;height:24px;border:1px dashed rgba(37,99,235,0.22);border-radius:4px;background:rgba(37,99,235,0.05);color:rgba(255,255,255,0.6);font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;text-align:right;padding:0 20px 0 4px;outline:none;-moz-appearance:textfield;}
+.ni-m::placeholder{color:rgba(37,99,235,0.38);font-size:10px;}
+.ni-m::-webkit-outer-spin-button,.ni-m::-webkit-inner-spin-button{-webkit-appearance:none;}
+.ni-m-suf{position:absolute;right:5px;top:50%;transform:translateY(-50%);font-size:9px;color:rgba(37,99,235,0.4);pointer-events:none;}
+
+/* RESULT CARDS */
+.rc{background:#080E1C;border:1px solid #1A2D4A;border-top:2px solid #2563EB;border-radius:12px;padding:13px 12px;}
+.rc.hl{background:#0D1A35;border-color:#2563EB;}
+.rc-lbl{font-size:9px;font-weight:700;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:5px;}
+.rc.hl .rc-lbl{color:#5A9AFF;}
+.rc-val{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:#fff;}
+.rc-sub{font-size:10px;color:rgba(255,255,255,0.25);margin-top:2px;}
+.rc.hl .rc-sub{color:#5A9AFF;}
+
+/* ROAS STRIP */
+.roas-strip{background:#080E1C;border:1px solid #1A2D4A;border-top:2px solid #2563EB;border-radius:12px;padding:14px 18px;margin:12px 28px 0;display:flex;align-items:center;gap:16px;}
+.rs-lbl{font-size:9px;font-weight:700;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.12em;white-space:nowrap;margin-bottom:4px;}
+.rs-val{font-family:'Playfair Display',serif;font-size:30px;font-weight:900;color:#2563EB;white-space:nowrap;}
+.rs-track{flex:1;height:5px;background:#1A2D4A;border-radius:3px;overflow:hidden;}
+.rs-fill{height:100%;background:linear-gradient(90deg,#1240A0,#2563EB,#5A9AFF);border-radius:3px;transition:width 0.45s cubic-bezier(.34,1.5,.64,1);}
+.rs-info{font-size:11px;color:rgba(255,255,255,0.6);text-align:right;white-space:nowrap;}
+.rs-info strong{color:#fff;display:block;font-size:13px;margin-bottom:2px;}
+.dv-lbl{display:flex;align-items:center;gap:8px;margin:14px 28px 0;font-size:9px;font-weight:700;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:0.14em;}
+.dv-lbl::before,.dv-lbl::after{content:'';flex:1;height:1px;background:#1A2D4A;}
+.dv-plus{color:#2563EB;font-size:12px;}
+.disc{font-size:10px;color:rgba(255,255,255,0.2);text-align:center;padding:14px 28px 18px;border-top:1px solid #1A2D4A;margin-top:12px;}
+.disc-url{color:#2563EB;}
+
+/* LTV */
+.ltv-hero{background:linear-gradient(135deg,#0C1E45 0%,#080E1C 100%);border:1px solid rgba(37,99,235,0.45);border-top:2px solid #2563EB;border-radius:14px;padding:20px 22px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;gap:14px;position:relative;overflow:hidden;}
+.ltv-stripes{position:absolute;right:120px;top:0;bottom:0;display:flex;align-items:center;font-size:9px;letter-spacing:5px;color:#2563EB;opacity:0.08;font-weight:700;pointer-events:none;}
+.ltv-ht{font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:#fff;margin-bottom:5px;}
+.ltv-hs{font-size:11px;color:rgba(255,255,255,0.55);line-height:1.55;}
+.ltv-badge{background:#2563EB;border-radius:10px;padding:12px 18px;text-align:center;flex-shrink:0;}
+.ltv-bv{font-family:'Playfair Display',serif;font-size:22px;font-weight:900;color:#fff;}
+.ltv-bl{font-size:9px;color:rgba(255,255,255,0.7);margin-top:3px;text-transform:uppercase;letter-spacing:0.1em;}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;}
+.g32{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:14px;}
+.roas-card{background:#080E1C;border:1px solid #1A2D4A;border-top:2px solid #2563EB;border-radius:12px;padding:16px;}
+.rh{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px;}
+.rl{font-size:9px;font-weight:700;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.12em;}
+.rv{font-family:'Playfair Display',serif;font-size:24px;font-weight:900;color:#2563EB;}
+.rt{height:5px;background:#1A2D4A;border-radius:3px;overflow:hidden;margin-bottom:6px;}
+.rf{height:100%;background:linear-gradient(90deg,#1240A0,#2563EB,#5A9AFF);border-radius:3px;transition:width 0.4s cubic-bezier(.34,1.5,.64,1);}
+.rs2{display:flex;justify-content:space-between;font-size:9px;color:rgba(255,255,255,0.2);}
+.ltv-note{font-size:11px;color:rgba(255,255,255,0.55);background:#080E1C;border-left:2px solid #2563EB;border-radius:0 10px 10px 0;padding:12px 16px;line-height:1.7;margin-top:14px;}
+.ltv-note strong{color:#5A9AFF;}
+
+/* PROJEÇÃO */
+.proj-cw{background:#080E1C;border:1px solid #1A2D4A;border-top:2px solid #2563EB;border-radius:12px;padding:18px;margin-bottom:14px;}
+.proj-diag{background:rgba(37,99,235,0.06);border:1px solid rgba(37,99,235,0.22);border-left:3px solid #2563EB;border-radius:0 12px 12px 0;padding:14px 18px;font-size:12px;color:rgba(255,255,255,0.65);line-height:1.8;margin-top:14px;}
+.proj-col-lbl{display:flex;align-items:center;gap:8px;margin:0 0 10px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;}
+.proj-col-lbl::after{content:'';flex:1;height:1px;background:#1A2D4A;}
+.ic-green{background:#080E1C;border:1px solid rgba(74,222,128,0.25);border-radius:12px;padding:13px 14px;margin-bottom:10px;}
+.ic-green-out{background:rgba(74,222,128,0.03);border:1px solid rgba(74,222,128,0.18);border-radius:12px;padding:13px 14px;margin-bottom:10px;}
+
+/* GLOSSARY */
+.gg{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.gc{background:#080E1C;border:1px solid #1A2D4A;border-left:2px solid #2563EB;border-radius:0 12px 12px 0;padding:14px 16px;}
+.gc-term{font-family:'Playfair Display',serif;font-size:14px;font-weight:700;color:#fff;margin-bottom:4px;}
+.gc-abbr{display:inline-block;font-size:9px;font-weight:700;background:rgba(37,99,235,0.15);color:#5A9AFF;border:1px solid rgba(37,99,235,0.35);border-radius:4px;padding:1px 7px;margin-bottom:8px;letter-spacing:0.07em;}
+.gc-def{font-size:12px;color:rgba(255,255,255,0.55);line-height:1.6;}
+.gc-formula{margin-top:8px;font-size:10px;color:#5A9AFF;background:#05080F;border-radius:5px;padding:6px 10px;font-family:monospace;border:1px solid #1A2D4A;}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- TOPBAR -->
+<div class="tb">
+  <div class="tb-glow"></div>
+  <div class="tb-stripes">////////</div>
+  <div class="tb-head">
+    <div>
+      <div class="brand-name">Effect</div>
+      <div class="brand-tag">Calculadora de Performance · Effect Digital</div>
+    </div>
+    <div class="tb-badge">
+      <div class="tb-badge-lbl">ROAS projetado</div>
+      <div class="tb-badge-val" id="badge-roas">— ×</div>
+    </div>
+  </div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showPanel('roas')">Calculadora ROAS</button>
+    <button class="nav-tab" onclick="showPanel('ltv')">Calculadora LTV</button>
+    <button class="nav-tab hl-green" onclick="showPanel('proj')">📈 Projeção <span id="nav-meses-lbl">4</span> Meses</button>
+    <button class="nav-tab" onclick="showPanel('gloss')">Glossário</button>
+  </div>
+</div>
+
+<!-- ══ ROAS ══ -->
+<div class="panel active" id="panel-roas">
+  <div class="split">
+    <div class="sl">
+      <div class="sc-row">
+        <button class="sc-pill active" onclick="setScenario('conservador')">Conservador</button>
+        <button class="sc-pill" onclick="setScenario('realista')">Realista</button>
+        <button class="sc-pill" onclick="setScenario('otimista')">Otimista</button>
+      </div>
+      <div class="ic">
+        <div class="ic-lbl"><span class="ic-plus">+</span> Investimento mensal</div>
+        <div class="spin-row">
+          <button class="sb" onclick="step('investimento',-100)">−</button>
+          <div class="ni-w"><span class="ni-pre">R$</span><input class="ni pre" type="number" id="investimento" value="3000" min="0" step="100" oninput="onManual()" onchange="clampAll()"></div>
+          <button class="sb" onclick="step('investimento',100)">+</button>
+        </div>
+        <input type="range" class="rm" id="investimento-s" min="500" max="30000" step="100" value="3000" oninput="sliderSync('investimento')">
+      </div>
+      <div class="ic">
+        <div class="ic-lbl"><span class="ic-plus">+</span> Custo por lead (CPL)</div>
+        <div class="spin-row">
+          <button class="sb" onclick="step('cpl',-5)">−</button>
+          <div class="ni-w"><span class="ni-pre">R$</span><input class="ni pre" type="number" id="cpl" value="30" min="0.01" step="5" oninput="onManual()" onchange="clampAll()"></div>
+          <button class="sb" onclick="step('cpl',5)">+</button>
+        </div>
+        <input type="range" class="rm" id="cpl-s" min="5" max="200" step="5" value="30" oninput="sliderSync('cpl')">
+      </div>
+      <div class="ic">
+        <div class="ic-lbl"><span class="ic-plus">+</span> Taxa de agendamento</div>
+        <div class="spin-row">
+          <button class="sb" onclick="step('agend',-5)">−</button>
+          <div class="ni-w"><span class="ni-suf">%</span><input class="ni" type="number" id="agend" value="60" min="1" max="100" step="5" style="padding-right:28px" oninput="onManual()" onchange="clampAll()"></div>
+          <button class="sb" onclick="step('agend',5)">+</button>
+        </div>
+        <input type="range" class="rm" id="agend-s" min="1" max="100" step="5" value="60" oninput="sliderSync('agend')">
+      </div>
+      <div class="ic">
+        <div class="ic-lbl"><span class="ic-plus">+</span> Taxa de conversão</div>
+        <div class="spin-row">
+          <button class="sb" onclick="step('taxa',-1)">−</button>
+          <div class="ni-w"><span class="ni-suf">%</span><input class="ni" type="number" id="taxa" value="15" min="0.1" max="100" step="1" style="padding-right:28px" oninput="onManual()" onchange="clampAll()"></div>
+          <button class="sb" onclick="step('taxa',1)">+</button>
+        </div>
+        <input type="range" class="rm" id="taxa-s" min="1" max="50" step="1" value="15" oninput="sliderSync('taxa')">
+      </div>
+      <div class="ic" style="margin-bottom:0;flex:1;">
+        <div class="ic-lbl"><span class="ic-plus">+</span> Ticket médio</div>
+        <div class="spin-row">
+          <button class="sb" onclick="step('ticket',-100)">−</button>
+          <div class="ni-w"><span class="ni-pre">R$</span><input class="ni pre" type="number" id="ticket" value="1500" min="0" step="100" oninput="onManual()" onchange="clampAll()"></div>
+          <button class="sb" onclick="step('ticket',100)">+</button>
+        </div>
+        <input type="range" class="rm" id="ticket-s" min="200" max="10000" step="100" value="1500" oninput="sliderSync('ticket')">
+      </div>
+    </div>
+
+    <div class="sr">
+      <div class="f-hd">+ ampulheta de vendas</div>
+      <div class="funnel">
+        <div class="f-step"><div class="f-box" style="width:100%">
+          <div class="f-ico">📋</div>
+          <div class="f-info"><div class="f-lbl">Leads gerados</div><div class="f-val" id="f-leads">—</div><div class="f-sub">interessados / mês</div></div>
+        </div></div>
+        <div class="f-conn"><div class="f-line"></div><div class="f-bubble" id="f-b1">tx agendamento</div><div class="f-line"></div></div>
+        <div class="f-step"><div class="f-box" style="width:78%">
+          <div class="f-ico">📅</div>
+          <div class="f-info"><div class="f-lbl">Agendamentos</div><div class="f-val" id="f-agend">—</div><div class="f-sub">consultas marcadas</div></div>
+        </div></div>
+        <div class="f-conn"><div class="f-line"></div><div class="f-bubble" id="f-b2">tx conversão</div><div class="f-line"></div></div>
+        <div class="f-step"><div class="f-box hl" style="width:56%">
+          <div class="f-ico" style="background:rgba(37,99,235,0.25);border-color:#2563EB;">💎</div>
+          <div class="f-info"><div class="f-lbl">Fechamentos</div><div class="f-val" id="f-fechamentos">—</div><div class="f-sub" id="f-sub">novos pacientes / mês</div></div>
+        </div></div>
+        <div class="f-sep">
+          <div class="f-sep-line" style="background:linear-gradient(90deg,transparent,#2563EB);"></div>
+          <div class="f-sep-pill">onde o lucro real começa</div>
+          <div class="f-sep-line" style="background:linear-gradient(90deg,#2563EB,transparent);"></div>
+        </div>
+        <div class="f-conn-m"><div class="f-line-m"></div></div>
+        <div class="f-step"><div class="f-box-m" style="width:66%">
+          <div class="f-ico-m">🤝</div>
+          <div class="f-info-m">
+            <div class="f-lbl-m">Relacionamento</div>
+            <div class="f-val-m" id="m-rel-val">???</div>
+            <div style="display:flex;align-items:center;gap:4px;margin-top:4px;">
+              <div class="sb-m" onclick="stepM('m-retencao',-10)">−</div>
+              <div style="position:relative;flex:1;"><input class="ni-m" type="number" id="m-retencao" value="" placeholder="% voltam" min="0" max="100" step="10" oninput="calcMystery()"><span class="ni-m-suf">%</span></div>
+              <div class="sb-m" onclick="stepM('m-retencao',10)">+</div>
+            </div>
+            <div class="f-sub-m">dos fechados voltam</div>
+          </div>
+        </div></div>
+        <div class="f-conn-m"><div class="f-line-m"></div></div>
+        <div class="f-step"><div class="f-box-m" style="width:82%">
+          <div class="f-ico-m">🗣️</div>
+          <div class="f-info-m">
+            <div class="f-lbl-m">Indicações veladas</div>
+            <div class="f-val-m" id="m-ind-val">???</div>
+            <div style="display:flex;align-items:center;gap:4px;margin-top:4px;">
+              <div class="sb-m" onclick="stepM('m-indicacao',-10)">−</div>
+              <div style="position:relative;flex:1;"><input class="ni-m" type="number" id="m-indicacao" value="" placeholder="% indicam" min="0" max="200" step="10" oninput="calcMystery()"><span class="ni-m-suf">%</span></div>
+              <div class="sb-m" onclick="stepM('m-indicacao',10)">+</div>
+            </div>
+            <div class="f-sub-m">dos fechados indicam</div>
+          </div>
+        </div></div>
+        <div class="f-conn-m"><div class="f-line-m"></div></div>
+        <div class="f-step"><div class="f-box-m" style="width:100%;border-bottom:2px solid rgba(37,99,235,0.45);">
+          <div class="f-ico-m">📈</div>
+          <div class="f-info-m">
+            <div class="f-lbl-m">Retornos + crescimento orgânico</div>
+            <div class="f-val-m" id="m-total-val">???</div>
+            <div class="f-sub-m" id="m-total-sub">preencha os campos acima</div>
+          </div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+  <div class="dv-lbl"><span class="dv-plus">+</span> Clientes</div>
+  <div style="padding:12px 28px 0;display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+    <div class="rc"><div class="rc-lbl">Clientes fechados</div><div class="rc-val" id="r-fechados">—</div><div class="rc-sub">novos pacientes / mês</div></div>
+    <div class="rc"><div class="rc-lbl">Clientes na base</div><div class="rc-val" id="r-na-base">—</div><div class="rc-sub">leads não convertidos</div></div>
+  </div>
+  <div class="dv-lbl"><span class="dv-plus">+</span> ROAS médio calculado</div>
+  <div style="padding:10px 28px 0;">
+    <div class="roas-strip">
+      <div><div class="rs-lbl">ROAS médio</div><div class="rs-val" id="r-roas">—</div></div>
+      <div class="rs-track"><div class="rs-fill" id="roas-fill" style="width:0%"></div></div>
+      <div class="rs-info"><strong id="r-cac-sm">CAC: —</strong><span style="font-size:9px;opacity:0.5;">escala 0× → 15×</span></div>
+    </div>
+  </div>
+  <div class="disc">Projeções baseadas nas métricas inseridas · Resultados variam conforme segmentação e criativo · <span class="disc-url">effectdigital.com.br</span></div>
+</div>
+
+<!-- ══ LTV ══ -->
+<div class="panel" id="panel-ltv">
+  <div class="pp">
+    <div class="ltv-hero">
+      <div class="ltv-stripes">////////</div>
+      <div><div class="ltv-ht">Valor real do paciente ao longo do tempo</div><div class="ltv-hs">Quanto cada paciente realmente vale para a clínica,<br>considerando retornos, indicações e tempo de relacionamento.</div></div>
+      <div class="ltv-badge"><div class="ltv-bv" id="ltv-total">R$ 0</div><div class="ltv-bl">LTV calculado</div></div>
+    </div>
+    <div class="g3">
+      <div class="ic" style="margin-bottom:0"><div class="ic-lbl"><span class="ic-plus">+</span> Ticket médio</div><div class="spin-row"><button class="sb" onclick="stepL('ltv-ticket',-100)">−</button><div class="ni-w"><span class="ni-pre">R$</span><input class="ni pre" type="number" id="ltv-ticket" value="1500" min="0" step="100" oninput="calcLtv()"></div><button class="sb" onclick="stepL('ltv-ticket',100)">+</button></div></div>
+      <div class="ic" style="margin-bottom:0"><div class="ic-lbl"><span class="ic-plus">+</span> Visitas por ano</div><div class="spin-row"><button class="sb" onclick="stepL('ltv-visitas',-1)">−</button><div class="ni-w"><span class="ni-suf">×</span><input class="ni" type="number" id="ltv-visitas" value="2" min="1" step="1" style="padding-right:26px" oninput="calcLtv()"></div><button class="sb" onclick="stepL('ltv-visitas',1)">+</button></div></div>
+      <div class="ic" style="margin-bottom:0"><div class="ic-lbl"><span class="ic-plus">+</span> Retenção</div><div class="spin-row"><button class="sb" onclick="stepL('ltv-anos',-1)">−</button><div class="ni-w"><span class="ni-suf">anos</span><input class="ni" type="number" id="ltv-anos" value="3" min="1" step="1" style="padding-right:40px" oninput="calcLtv()"></div><button class="sb" onclick="stepL('ltv-anos',1)">+</button></div></div>
+      <div class="ic" style="margin-bottom:0"><div class="ic-lbl"><span class="ic-plus">+</span> Taxa de indicação</div><div class="spin-row"><button class="sb" onclick="stepL('ltv-indicacao',-5)">−</button><div class="ni-w"><span class="ni-suf">%</span><input class="ni" type="number" id="ltv-indicacao" value="20" min="0" max="100" step="5" style="padding-right:26px" oninput="calcLtv()"></div><button class="sb" onclick="stepL('ltv-indicacao',5)">+</button></div></div>
+      <div class="ic" style="margin-bottom:0"><div class="ic-lbl"><span class="ic-plus">+</span> CAC</div><div class="spin-row"><button class="sb" onclick="stepL('ltv-cac',-50)">−</button><div class="ni-w"><span class="ni-pre">R$</span><input class="ni pre" type="number" id="ltv-cac" value="200" min="0" step="50" oninput="calcLtv()"></div><button class="sb" onclick="stepL('ltv-cac',50)">+</button></div></div>
+      <div class="ic" style="margin-bottom:0"><div class="ic-lbl"><span class="ic-plus">+</span> Margem de lucro</div><div class="spin-row"><button class="sb" onclick="stepL('ltv-margem',-5)">−</button><div class="ni-w"><span class="ni-suf">%</span><input class="ni" type="number" id="ltv-margem" value="35" min="0" max="100" step="5" style="padding-right:26px" oninput="calcLtv()"></div><button class="sb" onclick="stepL('ltv-margem',5)">+</button></div></div>
+    </div>
+    <div class="g32">
+      <div class="rc"><div class="rc-lbl">Receita bruta total</div><div class="rc-val" id="ltv-r-bruta">—</div><div class="rc-sub">por paciente / ciclo</div></div>
+      <div class="rc"><div class="rc-lbl">Lucro líquido</div><div class="rc-val" id="ltv-r-lucro">—</div><div class="rc-sub">descontado o CAC</div></div>
+      <div class="rc hl"><div class="rc-lbl">LTV com indicações</div><div class="rc-val" id="ltv-r-total">—</div><div class="rc-sub">valor expandido</div></div>
+    </div>
+    <div class="roas-card"><div class="rh"><div class="rl">Relação LTV / CAC</div><div class="rv" id="ltv-ratio">—</div></div><div class="rt"><div class="rf" id="ltv-fill" style="width:0%"></div></div><div class="rs2"><span>0×</span><span>3×</span><span>7×</span><span>15×</span><span>25×+</span></div></div>
+    <div class="ltv-note"><strong>Como interpretar:</strong> LTV/CAC acima de <strong>3×</strong> é saudável. Acima de <strong>7×</strong> é alta eficiência de aquisição. Abaixo de <strong>1×</strong> o custo supera o valor gerado.</div>
+    <div class="disc" style="border-top:1px solid #1A2D4A;margin-top:14px;">Cálculo simplificado · Não considera churn gradual ou NPV · <span class="disc-url">effectdigital.com.br</span></div>
+  </div>
+</div>
+
+<!-- ══ PROJEÇÃO 4 MESES ══ -->
+<div class="panel" id="panel-proj">
+  <div class="pp">
+
+    <!-- HERO -->
+    <div class="ltv-hero" style="margin-bottom:20px;border-top-color:#4ADE80;border-color:rgba(74,222,128,0.35);">
+      <div class="ltv-stripes" style="color:#4ADE80;">////////</div>
+      <div>
+        <div class="ltv-ht">Rota para o seu alvo — <span id="hero-meses-lbl">4</span> meses</div>
+        <div class="ltv-hs">Defina onde a clínica está hoje e onde quer chegar.<br>A calculadora mostra o que precisa acontecer para isso ser realidade.</div>
+      </div>
+      <div class="ltv-badge" id="proj-badge" style="background:#059669;min-width:130px;">
+        <div class="ltv-bv" id="proj-viavel" style="font-size:14px;letter-spacing:0.02em;">—</div>
+        <div class="ltv-bl">viabilidade da meta</div>
+      </div>
+    </div>
+
+    <!-- INPUTS: 2 colunas -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:20px;">
+
+      <!-- HOJE -->
+      <div>
+        <div class="proj-col-lbl" style="color:rgba(255,255,255,0.4);">◎ Situação atual</div>
+        <div class="ic">
+          <div class="ic-lbl"><span class="ic-plus">+</span> Faturamento atual / mês</div>
+          <div class="spin-row">
+            <button class="sb" onclick="stepP('p-fat-atual',-5000)">−</button>
+            <div class="ni-w"><span class="ni-pre">R$</span><input class="ni pre" type="number" id="p-fat-atual" value="50000" min="0" step="5000" oninput="calcProj()"></div>
+            <button class="sb" onclick="stepP('p-fat-atual',5000)">+</button>
+          </div>
+        </div>
+        <div class="ic">
+          <div class="ic-lbl"><span class="ic-plus">+</span> Investimento em tráfego / mês</div>
+          <div class="spin-row">
+            <button class="sb" onclick="stepP('p-inv',-500)">−</button>
+            <div class="ni-w"><span class="ni-pre">R$</span><input class="ni pre" type="number" id="p-inv" value="3000" min="0" step="500" oninput="calcProj()"></div>
+            <button class="sb" onclick="stepP('p-inv',500)">+</button>
+          </div>
+        </div>
+        <div class="ic">
+          <div class="ic-lbl"><span class="ic-plus">+</span> Ticket médio atual</div>
+          <div class="spin-row">
+            <button class="sb" onclick="stepP('p-ticket',-100)">−</button>
+            <div class="ni-w"><span class="ni-pre">R$</span><input class="ni pre" type="number" id="p-ticket" value="1500" min="0" step="100" oninput="calcProj()"></div>
+            <button class="sb" onclick="stepP('p-ticket',100)">+</button>
+          </div>
+        </div>
+        <div class="ic">
+          <div class="ic-lbl"><span class="ic-plus">+</span> Taxa de conversão atual (lead → paciente)</div>
+          <div class="spin-row">
+            <button class="sb" onclick="stepP('p-tx-conv',-1)">−</button>
+            <div class="ni-w"><span class="ni-suf">%</span><input class="ni" type="number" id="p-tx-conv" value="15" min="0.1" max="100" step="1" style="padding-right:28px" oninput="calcProj()"></div>
+            <button class="sb" onclick="stepP('p-tx-conv',1)">+</button>
+          </div>
+        </div>
+        <div class="ic" style="margin-bottom:0">
+          <div class="ic-lbl"><span class="ic-plus">+</span> Prazo para atingir o alvo</div>
+          <div class="spin-row">
+            <button class="sb" onclick="stepP('p-meses',-1)">−</button>
+            <div class="ni-w"><span class="ni-suf">meses</span><input class="ni" type="number" id="p-meses" value="4" min="1" max="24" step="1" style="padding-right:52px" oninput="calcProj()"></div>
+            <button class="sb" onclick="stepP('p-meses',1)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ALVO -->
+      <div>
+        <div class="proj-col-lbl" style="color:#4ADE80;">◎ Meta em <span id="col-meses-lbl">4</span> meses</div>
+        <div class="ic-green">
+          <div class="ic-lbl" style="color:rgba(74,222,128,0.6);"><span style="color:#4ADE80">+</span> Faturamento alvo / mês</div>
+          <div class="spin-row">
+            <button class="sb" onclick="stepP('p-fat-alvo',-5000)" style="border-color:rgba(74,222,128,0.25);">−</button>
+            <div class="ni-w"><span class="ni-pre" style="color:#4ADE80;">R$</span><input class="ni pre" type="number" id="p-fat-alvo" value="80000" min="0" step="5000" oninput="calcProj()" style="border-color:rgba(74,222,128,0.25);"></div>
+            <button class="sb" onclick="stepP('p-fat-alvo',5000)" style="border-color:rgba(74,222,128,0.25);">+</button>
+          </div>
+        </div>
+        <div class="ic-green-out">
+          <div class="ic-lbl" style="color:rgba(74,222,128,0.5);">crescimento necessário</div>
+          <div style="font-family:'Playfair Display',serif;font-size:24px;font-weight:900;color:#4ADE80;" id="p-crescimento">+R$ —</div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:3px;" id="p-crescimento-pct">— % de aumento</div>
+        </div>
+        <div class="ic-green-out" style="margin-bottom:0">
+          <div class="ic-lbl" style="color:rgba(74,222,128,0.5);">novos pacientes necessários / mês</div>
+          <div style="font-family:'Playfair Display',serif;font-size:24px;font-weight:900;color:#4ADE80;" id="p-novos-pac">—</div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:3px;">além dos atuais</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- O QUE PRECISA ACONTECER -->
+    <div class="dv-lbl" style="margin:0 0 14px;"><span class="dv-plus">+</span> O que precisa acontecer para chegar lá</div>
+    <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:16px;">
+      <div class="rc"><div class="rc-lbl">Leads necessários / mês</div><div class="rc-val" id="p-leads-nec">—</div><div class="rc-sub">para gerar os novos pacientes</div></div>
+      <div class="rc"><div class="rc-lbl">CPL máximo suportável</div><div class="rc-val" id="p-cpl-max">—</div><div class="rc-sub">com o budget disponível</div></div>
+      <div class="rc"><div class="rc-lbl">Tx de conversão (ref. CPL R$40)</div><div class="rc-val" id="p-tx-min">—</div><div class="rc-sub">com leads a R$40 de CPL</div></div>
+      <div class="rc hl"><div class="rc-lbl">ROAS sobre excedente</div><div class="rc-val" id="p-roas-nec">—</div><div class="rc-sub">crescimento gerado ÷ investimento</div></div>
+    </div>
+
+    <!-- ROAS EXPANDIDO + AMPULHETA -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;">
+      <div class="rc" style="border-top-color:#4ADE80;background:rgba(74,222,128,0.04);">
+        <div class="rc-lbl" style="color:rgba(74,222,128,0.6);">ROAS expandido (com ampulheta)</div>
+        <div class="rc-val" id="p-roas-exp" style="color:#4ADE80;">—</div>
+        <div class="rc-sub">considerando retornos, indicações e reconversão da base</div>
+      </div>
+      <div class="rc" style="border-top-color:#4ADE80;background:rgba(74,222,128,0.04);">
+        <div class="rc-lbl" style="color:rgba(74,222,128,0.6);">Faturamento extra pela ampulheta</div>
+        <div class="rc-val" id="p-fat-amp" style="color:#4ADE80;">—</div>
+        <div class="rc-sub">retornos (30%) + indicações (20%) + reconversão de base (10%)</div>
+      </div>
+    </div>
+
+    <!-- DISCLAIMER AMPULHETA -->
+    <div style="background:rgba(37,99,235,0.06);border:1px solid rgba(37,99,235,0.2);border-left:3px solid #2563EB;border-radius:0 12px 12px 0;padding:14px 18px;margin-bottom:16px;font-size:11px;color:rgba(255,255,255,0.6);line-height:1.8;">
+      <div style="font-size:10px;font-weight:700;color:#5A9AFF;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px;">⚠ Para atingir essa meta com maior facilidade</div>
+      Os números acima consideram <strong style="color:#fff">apenas o tráfego pago</strong>. Na prática, a meta fica muito mais acessível quando ativamos a lógica da <strong style="color:#fff">ampulheta de vendas</strong> em paralelo:<br><br>
+      <strong style="color:#5A9AFF">1. Estratégias de retenção</strong> — campanhas de retorno para pacientes que já foram atendidos e não voltaram. Custo zero de aquisição, ticket imediato.<br>
+      <strong style="color:#5A9AFF">2. Reconversão da base fria</strong> — leads que não fecharam nos meses anteriores precisam ser trabalhados comercialmente. Um lead já gerado não pode ser descartado.<br>
+      <strong style="color:#5A9AFF">3. Programa de indicações</strong> — pacientes satisfeitos indicam. Um processo estruturado de indicações pode gerar 20–40% dos novos pacientes sem custo de mídia.<br><br>
+      <span style="color:rgba(255,255,255,0.35);font-size:10px;">* As estimativas de ROAS expandido usam referências de mercado (30% retorno, 20% indicação, 10% reconversão). Os valores reais dependem da execução e da qualidade do atendimento da clínica.</span>
+    </div>
+
+    <!-- GRÁFICO -->
+    <div class="dv-lbl" style="margin:0 0 12px;"><span class="dv-plus">+</span> Curva de crescimento</div>
+    <div class="proj-cw"><canvas id="projChart"></canvas></div>
+
+    <!-- DIAGNÓSTICO -->
+    <div class="proj-diag" id="proj-diagnostico">Preencha os campos acima para ver o diagnóstico.</div>
+
+    <div class="disc" style="border-top:1px solid #1A2D4A;margin-top:14px;">Projeção linear em <span id="disc-meses-lbl">4</span> meses · Resultados dependem de execução consistente · <span class="disc-url">effectdigital.com.br</span></div>
+  </div>
+</div>
+
+<!-- ══ GLOSSÁRIO ══ -->
+<div class="panel" id="panel-gloss">
+  <div class="pp">
+    <div class="gg">
+      <div class="gc"><div class="gc-term">Investimento</div><span class="gc-abbr">BUDGET</span><div class="gc-def">Valor total investido em anúncios pagos no mês. Ponto de partida de todos os cálculos.</div><div class="gc-formula">Ex: R$ 3.000 / mês</div></div>
+      <div class="gc"><div class="gc-term">Custo por Lead</div><span class="gc-abbr">CPL</span><div class="gc-def">Quanto a clínica paga para atrair uma pessoa interessada. Quanto menor, mais eficiente a campanha.</div><div class="gc-formula">CPL = Investimento ÷ Leads</div></div>
+      <div class="gc"><div class="gc-term">Taxa de Conversão</div><span class="gc-abbr">TX CONV.</span><div class="gc-def">Percentual de leads que se tornam pacientes pagantes. Depende do atendimento e velocidade de resposta.</div><div class="gc-formula">TX = (Pacientes ÷ Leads) × 100</div></div>
+      <div class="gc"><div class="gc-term">Ticket Médio</div><span class="gc-abbr">TICKET</span><div class="gc-def">Valor médio gasto por paciente por procedimento. Influencia diretamente o faturamento e o ROAS.</div><div class="gc-formula">Ticket = Receita ÷ N.º pacientes</div></div>
+      <div class="gc"><div class="gc-term">Custo de Aquisição</div><span class="gc-abbr">CAC</span><div class="gc-def">Quanto a clínica gasta para conquistar cada novo paciente. Investimento dividido pelos pacientes gerados.</div><div class="gc-formula">CAC = Investimento ÷ Pacientes</div></div>
+      <div class="gc"><div class="gc-term">Retorno sobre Investimento</div><span class="gc-abbr">ROAS</span><div class="gc-def">Quanto a clínica fatura para cada R$1 investido. ROAS de 5× = R$5 para cada R$1 gasto.</div><div class="gc-formula">ROAS = Faturamento ÷ Investimento</div></div>
+      <div class="gc"><div class="gc-term">Valor Vitalício do Paciente</div><span class="gc-abbr">LTV</span><div class="gc-def">Receita total que um paciente gera durante todo o relacionamento com a clínica.</div><div class="gc-formula">LTV = Ticket × Visitas/ano × Anos</div></div>
+      <div class="gc"><div class="gc-term">Relação LTV / CAC</div><span class="gc-abbr">LTV:CAC</span><div class="gc-def">Indicador de saúde do negócio. Acima de 3× é saudável. Acima de 7× é excelente.</div><div class="gc-formula">LTV:CAC = LTV ÷ CAC</div></div>
+    </div>
+    <div class="disc" style="border-top:1px solid #1A2D4A;margin-top:16px;">Glossário de métricas — Effect Digital · <span class="disc-url">effectdigital.com.br</span></div>
+  </div>
+</div>
+
+</div>
+<script>
+var SC={conservador:{investimento:2000,cpl:50,agend:50,taxa:10,ticket:1000},realista:{investimento:4000,cpl:30,agend:60,taxa:15,ticket:1500},otimista:{investimento:8000,cpl:20,agend:70,taxa:25,ticket:2000}};
+
+function showPanel(id){
+  var ps=document.querySelectorAll('.panel');
+  for(var i=0;i<ps.length;i++) ps[i].classList.remove('active');
+  document.getElementById('panel-'+id).classList.add('active');
+  var ts=document.querySelectorAll('.nav-tab');
+  var ids=['roas','ltv','proj','gloss'];
+  for(var i=0;i<ts.length;i++) ts[i].classList.toggle('active',ids[i]===id);
+  if(id==='proj') calcProj();
+}
+
+function gv(id){return parseFloat(document.getElementById(id).value)||0;}
+function sv(id,v){
+  document.getElementById(id).value=v;
+  var s=document.getElementById(id+'-s');
+  if(s) s.value=Math.min(Math.max(v,parseFloat(s.min)),parseFloat(s.max));
+}
+function sliderSync(id){var s=document.getElementById(id+'-s');document.getElementById(id).value=s.value;onManual();calcRoas();}
+function step(id,d){
+  var v=gv(id)+d;
+  if(id==='taxa'||id==='agend') v=Math.min(100,Math.max(0.1,v));
+  else if(v<0) v=0;
+  sv(id,Math.round(v*100)/100);
+  onManual();calcRoas();
+}
+function stepL(id,d){var v=gv(id)+d;if(v<0)v=0;document.getElementById(id).value=Math.round(v*100)/100;calcLtv();}
+function stepM(id,d){var el=document.getElementById(id);var v=(parseFloat(el.value)||0)+d;if(v<0)v=0;el.value=v;calcMystery();}
+function stepP(id,d){var el=document.getElementById(id);var v=(parseFloat(el.value)||0)+d;if(v<0)v=0;el.value=v;calcProj();}
+function onManual(){var ps=document.querySelectorAll('.sc-pill');for(var i=0;i<ps.length;i++) ps[i].classList.remove('active');}
+function setScenario(name){
+  var ps=document.querySelectorAll('.sc-pill');
+  var ns=['conservador','realista','otimista'];
+  for(var i=0;i<ps.length;i++) ps[i].classList.toggle('active',ns[i]===name);
+  var s=SC[name];for(var k in s) sv(k,s[k]);
+  calcRoas();
+}
+function clampAll(){
+  var ids=['investimento','cpl','agend','taxa','ticket'];
+  for(var i=0;i<ids.length;i++){
+    var v=gv(ids[i]);
+    if(ids[i]==='taxa'||ids[i]==='agend') v=Math.min(100,Math.max(0,v));
+    if(v<0) v=0;
+    sv(ids[i],v);
+  }
+  calcRoas();
+}
+function fmtN(n){return Math.round(n).toLocaleString('pt-BR');}
+function fmtM(n){return 'R$\u00a0'+fmtN(n);}
+
+function calcRoas(){
+  var inv=gv('investimento'),cpl=gv('cpl'),ag=gv('agend'),taxa=gv('taxa'),ticket=gv('ticket');
+  var leads=cpl>0?inv/cpl:0;
+  var agend=leads*ag/100;
+  var cli=leads*taxa/100;
+  var fat=cli*ticket;
+  var cac=cli>0?inv/cli:0;
+  var roas=inv>0?fat/inv:0;
+  document.getElementById('f-leads').textContent=fmtN(leads);
+  document.getElementById('f-b1').textContent='tx agend '+ag+'%';
+  document.getElementById('f-agend').textContent=fmtN(agend);
+  document.getElementById('f-b2').textContent='tx conv '+taxa+'%';
+  document.getElementById('f-fechamentos').textContent=fmtN(cli);
+  document.getElementById('f-sub').textContent=fmtN(cli)+' novos pacientes / mês';
+  document.getElementById('r-fechados').textContent=fmtN(cli);
+  document.getElementById('r-na-base').textContent=fmtN(leads-cli);
+  document.getElementById('r-roas').textContent=roas.toFixed(2)+'×';
+  document.getElementById('badge-roas').textContent=roas.toFixed(1)+'×';
+  document.getElementById('r-cac-sm').textContent='CAC: '+fmtM(cac);
+  document.getElementById('roas-fill').style.width=Math.min(roas/15*100,100).toFixed(1)+'%';
+  document.getElementById('ltv-cac').value=Math.round(cac)||200;
+  document.getElementById('ltv-ticket').value=ticket;
+  calcLtv();calcMystery();
+}
+
+function calcMystery(){
+  var cli=parseFloat(document.getElementById('f-fechamentos').textContent.replace(/\./g,'').replace(',','.'))||0;
+  var ticket=gv('ticket');
+  var retEl=document.getElementById('m-retencao');
+  var indEl=document.getElementById('m-indicacao');
+  var rp=retEl.value!==''?parseFloat(retEl.value):null;
+  var ip=indEl.value!==''?parseFloat(indEl.value):null;
+  var ret=rp!==null?Math.round(cli*rp/100):null;
+  var ind=ip!==null?Math.round(cli*ip/100):null;
+  document.getElementById('m-rel-val').textContent=ret!==null?fmtN(ret)+' pac.':'???';
+  document.getElementById('m-ind-val').textContent=ind!==null?fmtN(ind)+' leads':'???';
+  if(ret!==null||ind!==null){
+    var tot=(ret||0)+(ind||0);
+    document.getElementById('m-total-val').textContent=fmtM(tot*ticket);
+    document.getElementById('m-total-sub').textContent=fmtN(tot)+' pac. extras · sem investir R$ 1 a mais';
+  } else {
+    document.getElementById('m-total-val').textContent='???';
+    document.getElementById('m-total-sub').textContent='preencha os campos acima';
+  }
+}
+
+function calcLtv(){
+  var ticket=gv('ltv-ticket'),visitas=gv('ltv-visitas'),anos=gv('ltv-anos');
+  var ind=gv('ltv-indicacao')/100,cac=gv('ltv-cac'),margem=gv('ltv-margem')/100;
+  var bruta=ticket*visitas*anos;
+  var lucro=bruta*margem-cac;
+  var ltv=bruta*(1+ind)*margem-cac;
+  var ratio=cac>0?ltv/cac:0;
+  document.getElementById('ltv-total').textContent=fmtM(ltv);
+  document.getElementById('ltv-r-bruta').textContent=fmtM(bruta);
+  document.getElementById('ltv-r-lucro').textContent=fmtM(lucro);
+  document.getElementById('ltv-r-total').textContent=fmtM(ltv);
+  document.getElementById('ltv-ratio').textContent=ratio.toFixed(1)+'×';
+  document.getElementById('ltv-fill').style.width=Math.min(ratio/25*100,100).toFixed(1)+'%';
+}
+
+function calcProj(){
+  var fatAtual = parseFloat(document.getElementById('p-fat-atual').value)||0;
+  var fatAlvo  = parseFloat(document.getElementById('p-fat-alvo').value)||0;
+  var inv      = parseFloat(document.getElementById('p-inv').value)||0;
+  var ticket   = parseFloat(document.getElementById('p-ticket').value)||1500;
+  var txConv   = (parseFloat(document.getElementById('p-tx-conv').value)||15) / 100;
+  var meses    = parseInt(document.getElementById('p-meses').value)||4;
+
+  // Crescimento necessário
+  var crescTotal = fatAlvo - fatAtual;
+  var crescPct   = fatAtual > 0 ? (crescTotal / fatAtual * 100) : 0;
+
+  // Base atual
+  var pacBase = ticket > 0 ? Math.round(fatAtual / ticket) : 0;
+
+  // Ampulheta — estimativas de mercado
+  var pacRetornos   = Math.round(pacBase * 0.30);
+  var pacIndicacoes = Math.round(pacBase * 0.20);
+  var pacReconv     = Math.round(pacBase * 0.10);
+  var fatAmpulheta  = (pacRetornos + pacIndicacoes + pacReconv) * ticket;
+
+  // ROAS expandido (tráfego + ampulheta sobre o potencial total)
+  var fatTotalPotencial = fatAtual + fatAmpulheta;
+  var roasExpandido = inv > 0 ? fatTotalPotencial / inv : 0;
+
+  // Novos pacientes necessários por mês
+  var novosPacMes = ticket > 0 ? Math.ceil((crescTotal / meses) / ticket) : 0;
+
+  // Leads necessários usando a TX DE CONVERSÃO EDITÁVEL
+  var leadsNec = (novosPacMes > 0 && txConv > 0) ? Math.ceil(novosPacMes / txConv) : 0;
+  var cplMax   = leadsNec > 0 ? (inv / leadsNec) : 0;
+
+  // Tx mínima com CPL de referência R$40 (indicador de mercado)
+  var leadsGerados = inv > 0 ? Math.floor(inv / 40) : 0;
+  var txMinDisplay = (leadsGerados > 0 && novosPacMes > 0) ? (novosPacMes / leadsGerados * 100) : 0;
+
+  // ─── ROAS NECESSÁRIO CORRETO ───
+  // Só considera o EXCEDENTE que a Effect vai gerar,
+  // não o faturamento que a clínica já tinha antes.
+  // Excedente = crescTotal (meta - atual)
+  // O ROAS da Effect = excedente gerado ÷ investimento em tráfego
+  var roasNec = (inv > 0 && crescTotal > 0) ? (crescTotal / inv) : 0;
+
+  // Cobertura da ampulheta sobre o crescimento necessário
+  var cobertaAmpulheta = Math.min(fatAmpulheta, crescTotal);
+  var cobertaPct = crescTotal > 0 ? (cobertaAmpulheta / crescTotal * 100) : 0;
+
+  // Viabilidade
+  var viavel, bColor;
+  if (crescTotal <= 0)      { viavel = 'Revise a meta';      bColor = '#7F1D1D'; }
+  else if (crescPct <= 20)  { viavel = 'Meta conservadora';  bColor = '#059669'; }
+  else if (crescPct <= 50)  { viavel = 'Meta realista';      bColor = '#2563EB'; }
+  else if (crescPct <= 100) { viavel = 'Meta arrojada';      bColor = '#1E3A6E'; }
+  else                      { viavel = 'Meta muito arrojada'; bColor = '#DC2626'; }
+
+  function sel(id) { return document.getElementById(id); }
+  function set(id, v) { var e = sel(id); if (e) e.textContent = v; }
+
+  set('p-crescimento',    (crescTotal >= 0 ? '+' : '-') + fmtM(Math.abs(crescTotal)));
+  set('p-crescimento-pct',(crescPct >= 0 ? '+' : '') + crescPct.toFixed(0) + '% de aumento no faturamento');
+  set('p-novos-pac',      novosPacMes > 0 ? fmtN(novosPacMes) + ' pac./mês' : '—');
+  set('p-leads-nec',      leadsNec > 0 ? fmtN(leadsNec) : '—');
+  set('p-cpl-max',        cplMax > 0 ? fmtM(Math.round(cplMax)) : '—');
+  set('p-tx-min',         txMinDisplay > 0 ? txMinDisplay.toFixed(1) + '%' : '—');
+  set('p-roas-nec',       roasNec > 0 ? roasNec.toFixed(1) + '×' : '—');
+  set('p-roas-exp',       roasExpandido > 0 ? roasExpandido.toFixed(1) + '×' : '—');
+  set('p-fat-amp',        fmtM(Math.round(fatAmpulheta)));
+
+  var badge = sel('proj-badge');
+  if (badge) badge.style.background = bColor;
+  set('proj-viavel', viavel);
+  set('proj-badge-lbl', 'faturamento no mês ' + meses);
+  // Atualizar todos os labels dinâmicos de meses
+  var spanIds = ['nav-meses-lbl','hero-meses-lbl','col-meses-lbl','disc-meses-lbl'];
+  for (var s = 0; s < spanIds.length; s++) {
+    var sp = document.getElementById(spanIds[s]);
+    if (sp) sp.textContent = meses;
+  }
+
+  // Diagnóstico
+  var diag = sel('proj-diagnostico');
+  if (diag) {
+    if (crescTotal <= 0) {
+      diag.innerHTML = 'O faturamento alvo está abaixo ou igual ao atual. Defina uma meta acima de <strong style="color:#fff">' + fmtM(fatAtual) + '</strong> para gerar uma projeção.';
+    } else if (inv <= 0) {
+      diag.innerHTML = 'Preencha o investimento mensal em tráfego para calcular o esforço necessário.';
+    } else {
+      var pacAmpTotal = pacRetornos + pacIndicacoes + pacReconv;
+      var txt = 'Para sair de <strong style="color:#fff">' + fmtM(fatAtual) + '</strong> e chegar em <strong style="color:#4ADE80">' + fmtM(fatAlvo) + '</strong>, ';
+      txt += 'são necessários <strong style="color:#fff">' + fmtN(novosPacMes) + ' novos pacientes por mês</strong> durante ' + meses + ' meses. ';
+      txt += 'Estimamos que <strong style="color:#5A9AFF">' + fmtN(pacAmpTotal) + ' desses</strong> podem vir da base existente ';
+      txt += '(retornos, indicações e reconversão de leads frios) — sem custo adicional de mídia. ';
+      txt += 'Via tráfego pago, são necessários <strong style="color:#fff">' + fmtN(leadsNec) + ' leads/mês</strong> ';
+      txt += 'com CPL máximo de <strong style="color:#fff">' + fmtM(Math.round(cplMax)) + '</strong>. ';
+      txt += 'O ROAS da Effect sobre o excedente gerado é de <strong style="color:#fff">' + roasNec.toFixed(1) + '×</strong>. ';
+      if (cobertaPct >= 100) {
+        txt += '<strong style="color:#4ADE80">A ampulheta sozinha pode cobrir toda a meta</strong> — o tráfego pago acelera ainda mais.';
+      } else if (txMinDisplay < 10) {
+        txt += 'A meta é <strong style="color:#4ADE80">alcançável</strong> com boa execução de tráfego e atendimento.';
+      } else if (txMinDisplay < 25) {
+        txt += 'A meta é <strong style="color:#5A9AFF">desafiadora</strong> — considere aumentar o budget ou rever o ticket.';
+      } else {
+        txt += '<strong style="color:#EF4444">Atenção:</strong> taxa de conversão necessária é alta para o budget. Aumente o investimento ou revise o alvo.';
+      }
+      diag.innerHTML = txt;
+    }
+  }
+
+  // Gráfico
+  var fats = [];
+  for (var i = 0; i <= meses; i++) {
+    fats.push(Math.round(fatAtual + (crescTotal / meses) * i));
+  }
+  var lblMeses = ['Hoje'];
+  for (var i = 1; i <= meses; i++) lblMeses.push('M' + i);
+
+  // Amostragem: máximo 7 pontos no gráfico (Hoje + 5 intermediários + final)
+  var chartFats, chartLbls;
+  var maxPts = 7;
+  if (meses + 1 <= maxPts) {
+    chartFats = fats.slice();
+    chartLbls = lblMeses.slice();
+  } else {
+    chartFats = [];
+    chartLbls = [];
+    var step = meses / (maxPts - 1);
+    for (var k = 0; k < maxPts - 1; k++) {
+      var idx = Math.round(k * step);
+      chartFats.push(fats[idx]);
+      chartLbls.push(lblMeses[idx]);
+    }
+    chartFats.push(fats[meses]);
+    chartLbls.push('M' + meses);
+  }
+  drawChart(chartFats, chartLbls, fatAlvo);
+}
+
+function drawChart(data,labels,alvo){
+  var canvas=document.getElementById('projChart');
+  if(!canvas) return;
+  var W=canvas.parentElement.clientWidth-36;
+  var H=220;
+  canvas.width=W; canvas.height=H;
+  var ctx=canvas.getContext('2d');
+  var pL=68,pR=16,pT=26,pB=36;
+  var cW=W-pL-pR,cH=H-pT-pB;
+  ctx.clearRect(0,0,W,H);
+
+  // Incluir alvo no range
+  var allVals=data.slice();
+  if(alvo) allVals.push(alvo);
+  var maxV=Math.max.apply(null,allVals)*1.15;
+  var minV=Math.min.apply(null,allVals)*0.85;
+  var rng=maxV-minV||1;
+  var n=data.length;
+
+  function xp(i){return pL+(i/(n-1))*cW;}
+  function yp(v){return pT+cH-((v-minV)/rng)*cH;}
+
+  // Grid
+  ctx.strokeStyle='rgba(255,255,255,0.05)';ctx.lineWidth=1;
+  for(var g=0;g<=4;g++){
+    var gy=pT+(g/4)*cH;
+    ctx.beginPath();ctx.moveTo(pL,gy);ctx.lineTo(pL+cW,gy);ctx.stroke();
+    var yv=maxV-(g/4)*rng;
+    ctx.fillStyle='rgba(255,255,255,0.3)';ctx.font='10px sans-serif';ctx.textAlign='right';
+    ctx.fillText(yv>=1000?'R$'+(yv/1000).toFixed(0)+'k':'R$'+Math.round(yv),pL-5,gy+4);
+  }
+
+  // Linha de alvo
+  if(alvo&&alvo>0){
+    var ay=yp(alvo);
+    ctx.beginPath();ctx.strokeStyle='#4ADE80';ctx.lineWidth=1.5;ctx.setLineDash([6,4]);
+    ctx.moveTo(pL,ay);ctx.lineTo(pL+cW,ay);ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle='#4ADE80';ctx.font='bold 10px sans-serif';ctx.textAlign='right';
+    ctx.fillText('Alvo: '+(alvo>=1000?'R$'+(alvo/1000).toFixed(0)+'k':'R$'+alvo),pL+cW,ay-4);
+  }
+
+  // Fill
+  var grd=ctx.createLinearGradient(0,pT,0,pT+cH);
+  grd.addColorStop(0,'rgba(37,99,235,0.3)');grd.addColorStop(1,'rgba(37,99,235,0.02)');
+  ctx.beginPath();ctx.moveTo(xp(0),yp(data[0]));
+  for(var i=1;i<n;i++){var cx=(xp(i-1)+xp(i))/2;ctx.bezierCurveTo(cx,yp(data[i-1]),cx,yp(data[i]),xp(i),yp(data[i]));}
+  ctx.lineTo(xp(n-1),pT+cH);ctx.lineTo(xp(0),pT+cH);ctx.closePath();
+  ctx.fillStyle=grd;ctx.fill();
+
+  // Line
+  ctx.beginPath();ctx.strokeStyle='#2563EB';ctx.lineWidth=2.5;ctx.lineJoin='round';
+  ctx.moveTo(xp(0),yp(data[0]));
+  for(var i=1;i<n;i++){var cx=(xp(i-1)+xp(i))/2;ctx.bezierCurveTo(cx,yp(data[i-1]),cx,yp(data[i]),xp(i),yp(data[i]));}
+  ctx.stroke();
+
+  // Points
+  for(var i=0;i<n;i++){
+    var px=xp(i),py=yp(data[i]);
+    ctx.beginPath();ctx.arc(px,py,6,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();
+    ctx.beginPath();ctx.arc(px,py,4,0,Math.PI*2);ctx.fillStyle='#2563EB';ctx.fill();
+    ctx.fillStyle='rgba(255,255,255,0.5)';ctx.font='600 10px sans-serif';ctx.textAlign='center';
+    ctx.fillText(labels[i],px,H-4);
+    ctx.fillStyle='rgba(255,255,255,0.85)';ctx.font='bold 10px sans-serif';
+    var vl=data[i]>=1000?'R$'+(data[i]/1000).toFixed(0)+'k':'R$'+data[i];
+    ctx.fillText(vl,px,py-10);
+  }
+}
+
+setScenario('conservador');
+calcLtv();
+calcProj();
+</script>
+</body>
+</html>
