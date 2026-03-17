@@ -218,7 +218,47 @@ html,body{background:#030608;min-height:100vh;display:flex;align-items:flex-star
         </div>
         <input type="range" class="rm" id="agend-s" min="1" max="100" step="5" value="60" oninput="sliderSync('agend')">
       </div>
-      
+      <div class="ic">
+        <div class="ic-lbl"><span class="ic-plus">+</span> Taxa de conversão</div>
+        <div class="spin-row">
+          <button class="sb" onclick="step('taxa',-1)">−</button>
+          <div class="ni-w"><span class="ni-suf">%</span><input class="ni" type="number" id="taxa" value="15" min="0.1" max="100" step="1" style="padding-right:28px" oninput="onManual()" onchange="clampAll()"></div>
+          <button class="sb" onclick="step('taxa',1)">+</button>
+        </div>
+        <input type="range" class="rm" id="taxa-s" min="1" max="50" step="1" value="15" oninput="sliderSync('taxa')">
+      </div>
+      <div class="ic" style="margin-bottom:10px;">
+        <div class="ic-lbl"><span class="ic-plus">+</span> Ticket médio</div>
+        <div class="spin-row">
+          <button class="sb" onclick="step('ticket',-100)">−</button>
+          <div class="ni-w"><span class="ni-pre">R$</span><input class="ni pre" type="number" id="ticket" value="1500" min="0" step="100" oninput="onManual()" onchange="clampAll()"></div>
+          <button class="sb" onclick="step('ticket',100)">+</button>
+        </div>
+        <input type="range" class="rm" id="ticket-s" min="200" max="10000" step="100" value="1500" oninput="sliderSync('ticket')">
+      </div>
+      <div style="background:#080E1C;border:1px solid #1A2D4A;border-top:2px solid #2563EB;border-radius:12px;padding:13px 14px;flex-shrink:0;">
+        <div style="font-size:9px;font-weight:700;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:6px;">CAC — Custo de Aquisição</div>
+        <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:900;color:#fff;" id="r-cac-card">—</div>
+        <div style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:3px;">por novo paciente conquistado</div>
+      </div>
+    </div>
+
+    <div class="sr">
+      <div class="f-hd">+ ampulheta de vendas</div>
+      <div class="funnel">
+        <div class="f-step"><div class="f-box" style="width:100%">
+          <div class="f-ico">📋</div>
+          <div class="f-info"><div class="f-lbl">Leads gerados</div><div class="f-val" id="f-leads">—</div><div class="f-sub">interessados / mês</div></div>
+        </div></div>
+        <div class="f-conn"><div class="f-line"></div><div class="f-bubble" id="f-b1">tx agendamento</div><div class="f-line"></div></div>
+        <div class="f-step"><div class="f-box" style="width:78%">
+          <div class="f-ico">📅</div>
+          <div class="f-info"><div class="f-lbl">Agendamentos</div><div class="f-val" id="f-agend">—</div><div class="f-sub">consultas marcadas</div></div>
+        </div></div>
+        <div class="f-conn"><div class="f-line"></div><div class="f-bubble" id="f-b2">tx conversão</div><div class="f-line"></div></div>
+        <div class="f-step"><div class="f-box hl" style="width:56%">
+          <div class="f-ico" style="background:rgba(37,99,235,0.25);border-color:#2563EB;">💎</div>
+          <div class="f-info"><div class="f-lbl">Fechamentos</div><div class="f-val" id="f-fechamentos">—</div><div class="f-sub" id="f-sub">novos pacientes / mês</div><div class="f-sub" id="f-fat" style="color:#4ADE80;font-weight:700;font-size:12px;margin-top:3px;">— em faturamento</div></div>
         </div></div>
         <div class="f-sep">
           <div class="f-sep-line" style="background:linear-gradient(90deg,transparent,#2563EB);"></div>
@@ -368,34 +408,42 @@ html,body{background:#030608;min-height:100vh;display:flex;align-items:flex-star
           <div style="font-family:'Playfair Display',serif;font-size:24px;font-weight:900;color:#4ADE80;" id="p-crescimento">+R$ —</div>
           <div style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:3px;" id="p-crescimento-pct">— % de aumento</div>
         </div>
-        <div class="ic-green-out" style="margin-bottom:0">
-          <div class="ic-lbl" style="color:rgba(74,222,128,0.5);">novos pacientes necessários / mês</div>
-          <div style="font-family:'Playfair Display',serif;font-size:24px;font-weight:900;color:#4ADE80;" id="p-novos-pac">—</div>
-          <div style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:3px;">além dos atuais</div>
-        </div>
+
       </div>
     </div>
 
     <!-- O QUE PRECISA ACONTECER -->
     <div class="dv-lbl" style="margin:0 0 14px;"><span class="dv-plus">+</span> O que precisa acontecer para chegar lá</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
+      <div style="background:rgba(74,222,128,0.06);border:1px solid rgba(74,222,128,0.25);border-top:2px solid #4ADE80;border-radius:12px;padding:16px 20px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;">
+        <div style="font-size:9px;font-weight:700;color:rgba(74,222,128,0.7);text-transform:uppercase;letter-spacing:0.12em;">Novos pacientes necessários / mês</div>
+        <div style="font-family:'Playfair Display',serif;font-size:32px;font-weight:900;color:#4ADE80;" id="p-novos-pac">—</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.4);">além dos atuais</div>
+      </div>
+      <div style="background:rgba(74,222,128,0.06);border:1px solid rgba(74,222,128,0.25);border-top:2px solid #4ADE80;border-radius:12px;padding:16px 20px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;">
+        <div style="font-size:9px;font-weight:700;color:rgba(74,222,128,0.7);text-transform:uppercase;letter-spacing:0.12em;">Crescimento médio de faturamento / mês</div>
+        <div style="font-family:'Playfair Display',serif;font-size:32px;font-weight:900;color:#4ADE80;" id="p-cresc-mes">—</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.4);">acréscimo por mês até o alvo</div>
+      </div>
+    </div>
     <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:16px;">
       <div class="rc"><div class="rc-lbl">Leads necessários / mês</div><div class="rc-val" id="p-leads-nec">—</div><div class="rc-sub">para gerar os novos pacientes</div></div>
       <div class="rc"><div class="rc-lbl">CPL máximo suportável</div><div class="rc-val" id="p-cpl-max">—</div><div class="rc-sub">com o budget disponível</div></div>
-      <div class="rc"><div class="rc-lbl">Tx de conversão (ref. CPL R$40)</div><div class="rc-val" id="p-tx-min">—</div><div class="rc-sub">com leads a R$40 de CPL</div></div>
+      <div class="rc"><div class="rc-lbl" id="p-tx-min-lbl">Tx de conversão necessária</div><div class="rc-val" id="p-tx-min">—</div><div class="rc-sub" id="p-tx-min-sub">com o CPL da calculadora</div></div>
       <div class="rc hl"><div class="rc-lbl">ROAS sobre excedente</div><div class="rc-val" id="p-roas-nec">—</div><div class="rc-sub">crescimento gerado ÷ investimento</div></div>
     </div>
 
-    <!-- ROAS EXPANDIDO + AMPULHETA -->
+    <!-- FATURAMENTO EXTRA AMPULHETA -->
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;">
       <div class="rc" style="border-top-color:#4ADE80;background:rgba(74,222,128,0.04);">
-        <div class="rc-lbl" style="color:rgba(74,222,128,0.6);">ROAS expandido (com ampulheta)</div>
-        <div class="rc-val" id="p-roas-exp" style="color:#4ADE80;">—</div>
-        <div class="rc-sub">considerando retornos, indicações e reconversão da base</div>
-      </div>
-      <div class="rc" style="border-top-color:#4ADE80;background:rgba(74,222,128,0.04);">
-        <div class="rc-lbl" style="color:rgba(74,222,128,0.6);">Faturamento extra pela ampulheta</div>
+        <div class="rc-lbl" style="color:rgba(74,222,128,0.6);">💰 Faturamento extra pela ampulheta</div>
         <div class="rc-val" id="p-fat-amp" style="color:#4ADE80;">—</div>
-        <div class="rc-sub">retornos (30%) + indicações (20%) + reconversão de base (10%)</div>
+        <div class="rc-sub">sem custo adicional de mídia — retornos + indicações + reconversão da base</div>
+      </div>
+      <div class="rc" style="border-top-color:rgba(74,222,128,0.4);background:rgba(74,222,128,0.02);">
+        <div class="rc-lbl" style="color:rgba(74,222,128,0.5);">Como se distribui</div>
+        <div class="rc-val" id="p-roas-exp" style="color:rgba(74,222,128,0.7);font-size:13px;line-height:1.4;" id="p-dist-amp">—</div>
+        <div class="rc-sub">retornos (30%) · indicações (20%) · reconversão (10%)</div>
       </div>
     </div>
 
@@ -406,7 +454,7 @@ html,body{background:#030608;min-height:100vh;display:flex;align-items:flex-star
       <strong style="color:#5A9AFF">1. Estratégias de retenção</strong> — campanhas de retorno para pacientes que já foram atendidos e não voltaram. Custo zero de aquisição, ticket imediato.<br>
       <strong style="color:#5A9AFF">2. Reconversão da base fria</strong> — leads que não fecharam nos meses anteriores precisam ser trabalhados comercialmente. Um lead já gerado não pode ser descartado.<br>
       <strong style="color:#5A9AFF">3. Programa de indicações</strong> — pacientes satisfeitos indicam. Um processo estruturado de indicações pode gerar 20–40% dos novos pacientes sem custo de mídia.<br><br>
-      <span style="color:rgba(255,255,255,0.35);font-size:10px;">* As estimativas de ROAS expandido usam referências de mercado (30% retorno, 20% indicação, 10% reconversão). Os valores reais dependem da execução e da qualidade do atendimento da clínica.</span>
+      <span style="color:rgba(255,255,255,0.35);font-size:10px;">* Estimativas baseadas em referências de mercado (30% retorno, 20% indicação, 10% reconversão). Os valores reais dependem da execução e da qualidade do atendimento da clínica.</span>
     </div>
 
     <!-- GRÁFICO -->
@@ -509,6 +557,8 @@ function calcRoas(){
   document.getElementById('r-roas').textContent=roas.toFixed(2)+'×';
   document.getElementById('badge-roas').textContent=roas.toFixed(1)+'×';
   document.getElementById('r-cac-sm').textContent='CAC: '+fmtM(cac);
+  var cacCard = document.getElementById('r-cac-card');
+  if(cacCard) cacCard.textContent = cac > 0 ? fmtM(Math.round(cac)) : '—';
   document.getElementById('roas-fill').style.width=Math.min(roas/15*100,100).toFixed(1)+'%';
   document.getElementById('ltv-cac').value=Math.round(cac)||200;
   document.getElementById('ltv-ticket').value=ticket;
@@ -554,10 +604,9 @@ function calcLtv(){
 function calcProj(){
   var fatAtual = parseFloat(document.getElementById('p-fat-atual').value)||0;
   var fatAlvo  = parseFloat(document.getElementById('p-fat-alvo').value)||0;
-  // Puxar diretamente da Calculadora ROAS
-  var inv      = gv('investimento');
-  var ticket   = gv('ticket');
-  var txConv   = gv('taxa') / 100;
+  var inv    = gv('investimento'); // da Calculadora ROAS
+  var ticket = gv('ticket'); // da Calculadora ROAS
+  var txConv = gv('taxa') / 100; // da Calculadora ROAS
   var meses    = parseInt(document.getElementById('p-meses').value)||4;
 
   // Crescimento necessário
@@ -584,8 +633,9 @@ function calcProj(){
   var leadsNec = (novosPacMes > 0 && txConv > 0) ? Math.ceil(novosPacMes / txConv) : 0;
   var cplMax   = leadsNec > 0 ? (inv / leadsNec) : 0;
 
-  // Tx mínima com CPL de referência R$40 (indicador de mercado)
-  var leadsGerados = inv > 0 ? Math.floor(inv / 40) : 0;
+  // Tx de conversão necessária com o CPL real da calculadora
+  var cplReal = gv('cpl'); // CPL da Calculadora ROAS
+  var leadsGerados = (inv > 0 && cplReal > 0) ? Math.floor(inv / cplReal) : 0;
   var txMinDisplay = (leadsGerados > 0 && novosPacMes > 0) ? (novosPacMes / leadsGerados * 100) : 0;
 
   // ─── ROAS NECESSÁRIO CORRETO ───
@@ -613,11 +663,18 @@ function calcProj(){
   set('p-crescimento',    (crescTotal >= 0 ? '+' : '-') + fmtM(Math.abs(crescTotal)));
   set('p-crescimento-pct',(crescPct >= 0 ? '+' : '') + crescPct.toFixed(0) + '% de aumento no faturamento');
   set('p-novos-pac',      novosPacMes > 0 ? fmtN(novosPacMes) + ' pac./mês' : '—');
+  var crescMes = meses > 0 ? Math.round(crescTotal / meses) : 0;
+  set('p-cresc-mes', crescMes > 0 ? fmtM(crescMes) + '/mês' : '—');
   set('p-leads-nec',      leadsNec > 0 ? fmtN(leadsNec) : '—');
   set('p-cpl-max',        cplMax > 0 ? fmtM(Math.round(cplMax)) : '—');
   set('p-tx-min',         txMinDisplay > 0 ? txMinDisplay.toFixed(1) + '%' : '—');
   set('p-roas-nec',       roasNec > 0 ? roasNec.toFixed(1) + '×' : '—');
-  set('p-roas-exp',       roasExpandido > 0 ? roasExpandido.toFixed(1) + '×' : '—');
+  // Distribuição da ampulheta
+  var distTxt = '';
+  if (fatAmpulheta > 0) {
+    distTxt = fmtM(Math.round(pacRetornos*ticket)) + ' retornos\n+ ' + fmtM(Math.round(pacIndicacoes*ticket)) + ' indicações\n+ ' + fmtM(Math.round(pacReconv*ticket)) + ' reconversão';
+  }
+  set('p-roas-exp', distTxt || '—');
   set('p-fat-amp',        fmtM(Math.round(fatAmpulheta)));
 
   var badge = sel('proj-badge');
