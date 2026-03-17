@@ -85,13 +85,13 @@ html,body{background:#030608;min-height:100vh;display:flex;align-items:flex-star
 /* AMPULHETA MISTÉRIO */
 .f-sep{display:flex;align-items:center;gap:8px;margin:5px 0;width:100%;}
 .f-sep-line{flex:1;height:1px;}
-.f-sep-pill{font-size:9px;font-weight:700;color:#2563EB;letter-spacing:0.1em;text-transform:uppercase;white-space:nowrap;padding:3px 10px;border:1px solid rgba(37,99,235,0.35);border-radius:20px;background:rgba(37,99,235,0.07);}
-.f-box-m{width:100%;background:rgba(37,99,235,0.04);border:1px dashed rgba(37,99,235,0.28);border-bottom:2px solid rgba(37,99,235,0.38);border-top:none;border-radius:12px;padding:10px 13px;display:flex;align-items:center;gap:10px;}
+.f-sep-pill{font-size:9px;font-weight:700;color:#7FAAFF;letter-spacing:0.1em;text-transform:uppercase;white-space:nowrap;padding:3px 10px;border:1px solid rgba(90,154,255,0.55);border-radius:20px;background:rgba(37,99,235,0.18);}
+.f-box-m{width:100%;background:rgba(37,99,235,0.12);border:1px solid rgba(37,99,235,0.5);border-bottom:2px solid rgba(37,99,235,0.65);border-top:none;border-radius:12px;padding:10px 13px;display:flex;align-items:center;gap:10px;}
 .f-ico-m{width:32px;height:32px;border-radius:8px;background:rgba(37,99,235,0.07);border:1px dashed rgba(37,99,235,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px;opacity:0.7;}
 .f-info-m{flex:1;min-width:0;}
-.f-lbl-m{font-size:9px;font-weight:700;color:rgba(255,255,255,0.32);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:2px;}
-.f-val-m{font-family:'Playfair Display',serif;font-size:18px;font-weight:900;color:rgba(37,99,235,0.5);letter-spacing:3px;line-height:1;}
-.f-sub-m{font-size:10px;color:rgba(255,255,255,0.2);margin-top:2px;}
+.f-lbl-m{font-size:9px;font-weight:700;color:rgba(255,255,255,0.7);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:2px;}
+.f-val-m{font-family:'Playfair Display',serif;font-size:18px;font-weight:900;color:rgba(120,170,255,0.9);letter-spacing:3px;line-height:1;}
+.f-sub-m{font-size:10px;color:rgba(255,255,255,0.5);margin-top:2px;}
 .f-conn-m{display:flex;flex-direction:column;align-items:center;}
 .f-line-m{width:1px;height:7px;background:rgba(37,99,235,0.22);}
 .sb-m{width:22px;height:22px;border-radius:5px;border:1px dashed rgba(37,99,235,0.28);background:rgba(37,99,235,0.06);color:rgba(255,255,255,0.4);font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.1s;user-select:none;}
@@ -190,11 +190,7 @@ html,body{background:#030608;min-height:100vh;display:flex;align-items:flex-star
 <div class="panel active" id="panel-roas">
   <div class="split">
     <div class="sl">
-      <div class="sc-row">
-        <button class="sc-pill active" onclick="setScenario('conservador')">Conservador</button>
-        <button class="sc-pill" onclick="setScenario('realista')">Realista</button>
-        <button class="sc-pill" onclick="setScenario('otimista')">Otimista</button>
-      </div>
+      
       <div class="ic">
         <div class="ic-lbl"><span class="ic-plus">+</span> Investimento mensal</div>
         <div class="spin-row">
@@ -257,7 +253,7 @@ html,body{background:#030608;min-height:100vh;display:flex;align-items:flex-star
         <div class="f-conn"><div class="f-line"></div><div class="f-bubble" id="f-b2">tx conversão</div><div class="f-line"></div></div>
         <div class="f-step"><div class="f-box hl" style="width:56%">
           <div class="f-ico" style="background:rgba(37,99,235,0.25);border-color:#2563EB;">💎</div>
-          <div class="f-info"><div class="f-lbl">Fechamentos</div><div class="f-val" id="f-fechamentos">—</div><div class="f-sub" id="f-sub">novos pacientes / mês</div></div>
+          <div class="f-info"><div class="f-lbl">Fechamentos</div><div class="f-val" id="f-fechamentos">—</div><div class="f-sub" id="f-sub">novos pacientes / mês</div><div class="f-sub" id="f-fat" style="color:#4ADE80;font-weight:700;font-size:12px;margin-top:3px;">— em faturamento</div></div>
         </div></div>
         <div class="f-sep">
           <div class="f-sep-line" style="background:linear-gradient(90deg,transparent,#2563EB);"></div>
@@ -286,7 +282,7 @@ html,body{background:#030608;min-height:100vh;display:flex;align-items:flex-star
             <div class="f-val-m" id="m-ind-val">???</div>
             <div style="display:flex;align-items:center;gap:4px;margin-top:4px;">
               <div class="sb-m" onclick="stepM('m-indicacao',-10)">−</div>
-              <div style="position:relative;flex:1;"><input class="ni-m" type="number" id="m-indicacao" value="" placeholder="% indicam" min="0" max="200" step="10" oninput="calcMystery()"><span class="ni-m-suf">%</span></div>
+              <div style="position:relative;flex:1;"><input class="ni-m" type="number" id="m-indicacao" value="" placeholder="% indicam" min="0" max="100" step="10" oninput="calcMystery()"><span class="ni-m-suf">%</span></div>
               <div class="sb-m" onclick="stepM('m-indicacao',10)">+</div>
             </div>
             <div class="f-sub-m">dos fechados indicam</div>
@@ -526,7 +522,7 @@ function step(id,d){
   onManual();calcRoas();
 }
 function stepL(id,d){var v=gv(id)+d;if(v<0)v=0;document.getElementById(id).value=Math.round(v*100)/100;calcLtv();}
-function stepM(id,d){var el=document.getElementById(id);var v=(parseFloat(el.value)||0)+d;if(v<0)v=0;el.value=v;calcMystery();}
+function stepM(id,d){var el=document.getElementById(id);var v=(parseFloat(el.value)||0)+d;if(v<0)v=0;if(v>100)v=100;el.value=v;calcMystery();}
 function stepP(id,d){var el=document.getElementById(id);var v=(parseFloat(el.value)||0)+d;if(v<0)v=0;el.value=v;calcProj();}
 function onManual(){var ps=document.querySelectorAll('.sc-pill');for(var i=0;i<ps.length;i++) ps[i].classList.remove('active');}
 function setScenario(name){
@@ -563,6 +559,7 @@ function calcRoas(){
   document.getElementById('f-b2').textContent='tx conv '+taxa+'%';
   document.getElementById('f-fechamentos').textContent=fmtN(cli);
   document.getElementById('f-sub').textContent=fmtN(cli)+' novos pacientes / mês';
+  var fatEl=document.getElementById('f-fat');if(fatEl){fatEl.textContent=fmtM(fat)+' em faturamento';}
   document.getElementById('r-fechados').textContent=fmtN(cli);
   document.getElementById('r-na-base').textContent=fmtN(leads-cli);
   document.getElementById('r-roas').textContent=roas.toFixed(2)+'×';
@@ -584,7 +581,7 @@ function calcMystery(){
   var ret=rp!==null?Math.round(cli*rp/100):null;
   var ind=ip!==null?Math.round(cli*ip/100):null;
   document.getElementById('m-rel-val').textContent=ret!==null?fmtN(ret)+' pac.':'???';
-  document.getElementById('m-ind-val').textContent=ind!==null?fmtN(ind)+' leads':'???';
+  document.getElementById('m-ind-val').textContent=ind!==null?fmtN(ind)+' clientes':'???';
   if(ret!==null||ind!==null){
     var tot=(ret||0)+(ind||0);
     document.getElementById('m-total-val').textContent=fmtM(tot*ticket);
