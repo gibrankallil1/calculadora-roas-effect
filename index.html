@@ -282,7 +282,7 @@ html,body{background:#030608;min-height:100vh;display:flex;align-items:flex-star
             <div class="f-val-m" id="m-ind-val">???</div>
             <div style="display:flex;align-items:center;gap:4px;margin-top:4px;">
               <div class="sb-m" onclick="stepM('m-indicacao',-10)">â</div>
-              <div style="position:relative;flex:1;"><input class="ni-m" type="number" id="m-indicacao" value="" placeholder="% indicam" min="0" max="200" step="10" oninput="calcMystery()"><span class="ni-m-suf">%</span></div>
+              <div style="position:relative;flex:1;"><input class="ni-m" type="number" id="m-indicacao" value="" placeholder="% indicam" min="0" max="100" step="10" oninput="calcMystery()"><span class="ni-m-suf">%</span></div>
               <div class="sb-m" onclick="stepM('m-indicacao',10)">+</div>
             </div>
             <div class="f-sub-m">dos fechados indicam</div>
@@ -522,7 +522,7 @@ function step(id,d){
   onManual();calcRoas();
 }
 function stepL(id,d){var v=gv(id)+d;if(v<0)v=0;document.getElementById(id).value=Math.round(v*100)/100;calcLtv();}
-function stepM(id,d){var el=document.getElementById(id);var v=(parseFloat(el.value)||0)+d;if(v<0)v=0;el.value=v;calcMystery();}
+function stepM(id,d){var el=document.getElementById(id);var v=(parseFloat(el.value)||0)+d;if(v<0)v=0;if(v>100)v=100;el.value=v;calcMystery();}
 function stepP(id,d){var el=document.getElementById(id);var v=(parseFloat(el.value)||0)+d;if(v<0)v=0;el.value=v;calcProj();}
 function onManual(){var ps=document.querySelectorAll('.sc-pill');for(var i=0;i<ps.length;i++) ps[i].classList.remove('active');}
 function setScenario(name){
