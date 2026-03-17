@@ -218,42 +218,7 @@ html,body{background:#030608;min-height:100vh;display:flex;align-items:flex-star
         </div>
         <input type="range" class="rm" id="agend-s" min="1" max="100" step="5" value="60" oninput="sliderSync('agend')">
       </div>
-      <div class="ic">
-        <div class="ic-lbl"><span class="ic-plus">+</span> Taxa de conversão</div>
-        <div class="spin-row">
-          <button class="sb" onclick="step('taxa',-1)">−</button>
-          <div class="ni-w"><span class="ni-suf">%</span><input class="ni" type="number" id="taxa" value="15" min="0.1" max="100" step="1" style="padding-right:28px" oninput="onManual()" onchange="clampAll()"></div>
-          <button class="sb" onclick="step('taxa',1)">+</button>
-        </div>
-        <input type="range" class="rm" id="taxa-s" min="1" max="50" step="1" value="15" oninput="sliderSync('taxa')">
-      </div>
-      <div class="ic" style="margin-bottom:0;flex:1;">
-        <div class="ic-lbl"><span class="ic-plus">+</span> Ticket médio</div>
-        <div class="spin-row">
-          <button class="sb" onclick="step('ticket',-100)">−</button>
-          <div class="ni-w"><span class="ni-pre">R$</span><input class="ni pre" type="number" id="ticket" value="1500" min="0" step="100" oninput="onManual()" onchange="clampAll()"></div>
-          <button class="sb" onclick="step('ticket',100)">+</button>
-        </div>
-        <input type="range" class="rm" id="ticket-s" min="200" max="10000" step="100" value="1500" oninput="sliderSync('ticket')">
-      </div>
-    </div>
-
-    <div class="sr">
-      <div class="f-hd">+ ampulheta de vendas</div>
-      <div class="funnel">
-        <div class="f-step"><div class="f-box" style="width:100%">
-          <div class="f-ico">📋</div>
-          <div class="f-info"><div class="f-lbl">Leads gerados</div><div class="f-val" id="f-leads">—</div><div class="f-sub">interessados / mês</div></div>
-        </div></div>
-        <div class="f-conn"><div class="f-line"></div><div class="f-bubble" id="f-b1">tx agendamento</div><div class="f-line"></div></div>
-        <div class="f-step"><div class="f-box" style="width:78%">
-          <div class="f-ico">📅</div>
-          <div class="f-info"><div class="f-lbl">Agendamentos</div><div class="f-val" id="f-agend">—</div><div class="f-sub">consultas marcadas</div></div>
-        </div></div>
-        <div class="f-conn"><div class="f-line"></div><div class="f-bubble" id="f-b2">tx conversão</div><div class="f-line"></div></div>
-        <div class="f-step"><div class="f-box hl" style="width:56%">
-          <div class="f-ico" style="background:rgba(37,99,235,0.25);border-color:#2563EB;">💎</div>
-          <div class="f-info"><div class="f-lbl">Fechamentos</div><div class="f-val" id="f-fechamentos">—</div><div class="f-sub" id="f-sub">novos pacientes / mês</div><div class="f-sub" id="f-fat" style="color:#4ADE80;font-weight:700;font-size:12px;margin-top:3px;">— em faturamento</div></div>
+      
         </div></div>
         <div class="f-sep">
           <div class="f-sep-line" style="background:linear-gradient(90deg,transparent,#2563EB);"></div>
@@ -374,30 +339,9 @@ html,body{background:#030608;min-height:100vh;display:flex;align-items:flex-star
             <button class="sb" onclick="stepP('p-fat-atual',5000)">+</button>
           </div>
         </div>
-        <div class="ic">
-          <div class="ic-lbl"><span class="ic-plus">+</span> Investimento em tráfego / mês</div>
-          <div class="spin-row">
-            <button class="sb" onclick="stepP('p-inv',-500)">−</button>
-            <div class="ni-w"><span class="ni-pre">R$</span><input class="ni pre" type="number" id="p-inv" value="3000" min="0" step="500" oninput="calcProj()"></div>
-            <button class="sb" onclick="stepP('p-inv',500)">+</button>
-          </div>
-        </div>
-        <div class="ic">
-          <div class="ic-lbl"><span class="ic-plus">+</span> Ticket médio atual</div>
-          <div class="spin-row">
-            <button class="sb" onclick="stepP('p-ticket',-100)">−</button>
-            <div class="ni-w"><span class="ni-pre">R$</span><input class="ni pre" type="number" id="p-ticket" value="1500" min="0" step="100" oninput="calcProj()"></div>
-            <button class="sb" onclick="stepP('p-ticket',100)">+</button>
-          </div>
-        </div>
-        <div class="ic">
-          <div class="ic-lbl"><span class="ic-plus">+</span> Taxa de conversão atual (lead → paciente)</div>
-          <div class="spin-row">
-            <button class="sb" onclick="stepP('p-tx-conv',-1)">−</button>
-            <div class="ni-w"><span class="ni-suf">%</span><input class="ni" type="number" id="p-tx-conv" value="15" min="0.1" max="100" step="1" style="padding-right:28px" oninput="calcProj()"></div>
-            <button class="sb" onclick="stepP('p-tx-conv',1)">+</button>
-          </div>
-        </div>
+        
+        
+        
         <div class="ic" style="margin-bottom:0">
           <div class="ic-lbl"><span class="ic-plus">+</span> Prazo para atingir o alvo</div>
           <div class="spin-row">
@@ -610,9 +554,10 @@ function calcLtv(){
 function calcProj(){
   var fatAtual = parseFloat(document.getElementById('p-fat-atual').value)||0;
   var fatAlvo  = parseFloat(document.getElementById('p-fat-alvo').value)||0;
-  var inv      = parseFloat(document.getElementById('p-inv').value)||0;
-  var ticket   = parseFloat(document.getElementById('p-ticket').value)||1500;
-  var txConv   = (parseFloat(document.getElementById('p-tx-conv').value)||15) / 100;
+  // Puxar diretamente da Calculadora ROAS
+  var inv      = gv('investimento');
+  var ticket   = gv('ticket');
+  var txConv   = gv('taxa') / 100;
   var meses    = parseInt(document.getElementById('p-meses').value)||4;
 
   // Crescimento necessário
